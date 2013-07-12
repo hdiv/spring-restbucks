@@ -15,6 +15,11 @@
  */
 package org.springsource.restbucks;
 
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+
+import org.hdiv.filter.ValidatorFilter;
+import org.hdiv.listener.InitListener;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.ComponentScan.Filter;
 import org.springframework.context.annotation.Configuration;
@@ -39,6 +44,15 @@ import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatche
  */
 public class RestbucksWebApplicationInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
 
+	/**
+	 * Adds Hdiv's listener to the application
+	 */
+	@Override
+	public void onStartup(ServletContext servletContext) throws ServletException {
+		super.onStartup(servletContext);
+		servletContext.addListener(new InitListener());
+	}
+	
 	/* 
 	 * (non-Javadoc)
 	 * @see org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer#getRootConfigClasses()
@@ -72,7 +86,7 @@ public class RestbucksWebApplicationInitializer extends AbstractAnnotationConfig
 	 */
 	@Override
 	protected javax.servlet.Filter[] getServletFilters() {
-		return new javax.servlet.Filter[] { new OpenEntityManagerInViewFilter() };
+		return new javax.servlet.Filter[] { new OpenEntityManagerInViewFilter(), new ValidatorFilter() };
 	}
 
 	/**
